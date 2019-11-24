@@ -33,7 +33,14 @@ body{
     height: 10%;
     border-radius: 5px;
     float: right;
-    top: 12%;
+    bottom: 60%;
     font-size: 20px;
     font-family: inherit;
+    margin: 20px;
+}
+.authorization_block .authorization_block_error{
+    position: relative;
+    color: orangered;
+    font-size: 20px;
+    margin-top: 25px;
 }
