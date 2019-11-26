@@ -44,3 +44,143 @@ body{
     font-size: 20px;
     margin-top: 25px;
 }
+
+.header_lk{
+    position: absolute;
+    height: 10%;
+    width: 100%;
+    background: darkslategray;
+    right: 0%;
+    top: 0%;
+    text-align: center;
+    font-size: 30px;
+    color: whitesmoke;
+}
+
+.menu_lk{
+    position: absolute;
+    height: 85%;
+    width: 20%;
+    top: 10%;
+    left: 0%;
+    background: darkgray;
+    padding: 20px 30px;
+}
+
+.footer_lk{
+    position: absolute;
+    height: 3%;
+    width: 100%;
+    top: 97%;
+    left: 0%;
+    font-size: 20px;
+    background: darkslategray;
+}
+
+.menu_title {
+    text-transform: uppercase;
+    letter-spacing: 2px;
+    color: #222;
+    font-size: 16px;
+    padding-left: 15px;
+    margin-bottom: 15px;
+    border-left: 2px solid #b99d61;
+}
+
+.menu_list {
+    padding: 0;
+    list-style: none;
+}
+
+.menu_list a:before {
+    content: "\2014";
+    margin-right: 14px;
+}
+
+.menu_list a {
+    text-decoration: none;
+    outline: none;
+    display: block;
+    padding: 6px 0;
+    letter-spacing: 1px;
+    font-weight: 300;
+    color: #444;
+    transition: .3s linear;
+}
+
+.menu_list a:hover {color: #b99d61;}
+
+.general_block{
+    position: absolute;
+    top: 10%;
+    left: 25%;
+    font-size: 30px;
+    width: 75%;
+}
+
+.general_block img{
+    position: fixed;
+    width: 400px;
+    height: 400px;
+    overflow: hidden;
+}
+
+.general_block .info_table{
+    width: 80%;
+    height: 100%;
+    table-layout: fixed;
+}
+
+.general_block .general_td{
+    font-size: 30px;
+    width: 30%;
+}
+
+.general_block .delimiter_col{
+    width: 5%;
+}
+
+.general_block .info_test_table{
+    font-size: 15px;
+    width: 98%;
+}
+
+.general_block .info_test_table .test_info_td{
+    font-size: 25px;
+    text-align: justify;
+}
+
+.general_block .info_test_table .img_info_test{
+    position: fixed;
+    /*margin-left: 20%;*/
+    margin-top: 0.5%;
+    width: 640px;
+    height: 285px;
+}
+
+.button_start_test{
+    position: fixed;
+    margin-left: 39%;
+    margin-top: 3.5%;
+    height: 15%;
+    width: 30%;
+    border: 1px solid black;
+    background: whitesmoke;
+    border-radius: 5px;
+    font-size: 30px;
+
+}
+
+.button_start_test:hover {
+    margin-top: 70px;
+
+    /*Тень*/
+    -webkit-box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    -moz-box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+    box-shadow: 0 14px 28px rgba(0,0,0,0.25), 0 10px 10px rgba(0,0,0,0.22);
+
+}
+
+.button_start_test:active {
+    background: white;
+}
