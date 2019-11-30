@@ -187,48 +187,68 @@ class User
          return $tables_code;
     }
 
+    public function endTest($num_mistakes, $each_time_table, $in_time){
+        $strResult = '';
+        $sec_testing = array_sum($each_time_table);
+        if ( $in_time ) {
+            $strResult = '<div class="success_end_test">Поздравляем, вы успешно завершили тестирование! Ваше время прохождения
+            тестирование составило '.intval($sec_testing/60).' минут '.($sec_testing % 60).' секунд. Количество ошибок 
+            '.$num_mistakes.'. <a href="show_results.php"> </a></div>';
+        } else {
+            $strResult = '<div class="time_out">К сожалению ваше время на прохождение тестирования вышло. Это
+            сообщение означает, что в момент прохождения тестирования вы были крайне не внимательный! 
+            Такое возможно по ряду причин, например, в следствии высокой степени усталости. Хорошо отдохните, выберите
+            выходной день, когда не будете ничем заняты и попробуйте пройти тестирование в следующий раз! Желаем вам удачи.</div>';
+        }
+        return $strResult;
+    }
+
+
     public function createTable($id_table, $num_table)
     {
         if($id_table == 0) {
-           $table_code = '<table class="test_table_'.$id_table.'">';
+            $table_code = '<table class="test_table_'.$id_table.'">';
+            $table_code .= '<tr ><td style="border: 0px;" colspan="5"><div class="test_table_header_'.$id_table.'">Таблица №'.($id_table+1).'</div></td></tr>';
         } else {
             $table_code = '<table class="test_table_'.$id_table.'" hidden>';
+            $table_code .= '<tr ><td style="border: 0px;" colspan="5"><div class="test_table_header_'.$id_table.'">Таблица №'.($id_table+1).'</div></td></tr>';
         }
+        $table_code .= '<tr><td style="border: 0px;" colspan="3"><span>Время прохождения теста</span></td><td style="border: 0px; text-align: right" colspan="2"><div class="timer"></div></td></tr>';
         $table_code .= '
                 <tr>
-                    <td>'.$this->tables[$num_table][0].'</td>
-                    <td>'.$this->tables[$num_table][1].'</td>
-                    <td>'.$this->tables[$num_table][2].'</td>
-                    <td>'.$this->tables[$num_table][3].'</td>
-                    <td>'.$this->tables[$num_table][4].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][0].'">'.$this->tables[$num_table][0].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][1].'">'.$this->tables[$num_table][1].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][2].'">'.$this->tables[$num_table][2].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][3].'">'.$this->tables[$num_table][3].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][4].'">'.$this->tables[$num_table][4].'</td>
                 </tr>
                 <tr>
-                    <td>'.$this->tables[$num_table][5].'</td>
-                    <td>'.$this->tables[$num_table][6].'</td>
-                    <td>'.$this->tables[$num_table][7].'</td>
-                    <td>'.$this->tables[$num_table][8].'</td>
-                    <td>'.$this->tables[$num_table][9].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][5].'">'.$this->tables[$num_table][5].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][6].'">'.$this->tables[$num_table][6].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][7].'">'.$this->tables[$num_table][7].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][8].'">'.$this->tables[$num_table][8].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][9].'">'.$this->tables[$num_table][9].'</td>
                 </tr>
                 <tr>
-                    <td>'.$this->tables[$num_table][10].'</td>
-                    <td>'.$this->tables[$num_table][11].'</td>
-                    <td>'.$this->tables[$num_table][12].'</td>
-                    <td>'.$this->tables[$num_table][13].'</td>
-                    <td>'.$this->tables[$num_table][14].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][10].'">'.$this->tables[$num_table][10].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][11].'">'.$this->tables[$num_table][11].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][12].'">'.$this->tables[$num_table][12].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][13].'">'.$this->tables[$num_table][13].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][14].'">'.$this->tables[$num_table][14].'</td>
                 </tr>
                 <tr>
-                    <td>'.$this->tables[$num_table][15].'</td>
-                    <td>'.$this->tables[$num_table][16].'</td>
-                    <td>'.$this->tables[$num_table][17].'</td>
-                    <td>'.$this->tables[$num_table][18].'</td>
-                    <td>'.$this->tables[$num_table][19].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][15].'">'.$this->tables[$num_table][15].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][16].'">'.$this->tables[$num_table][16].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][17].'">'.$this->tables[$num_table][17].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][18].'">'.$this->tables[$num_table][18].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][19].'">'.$this->tables[$num_table][19].'</td>
                 </tr>
                 <tr>
-                    <td>'.$this->tables[$num_table][20].'</td>
-                    <td>'.$this->tables[$num_table][21].'</td>
-                    <td>'.$this->tables[$num_table][22].'</td>
-                    <td>'.$this->tables[$num_table][23].'</td>
-                    <td>'.$this->tables[$num_table][24].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][20].'">'.$this->tables[$num_table][20].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][21].'">'.$this->tables[$num_table][21].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][22].'">'.$this->tables[$num_table][22].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][23].'">'.$this->tables[$num_table][23].'</td>
+                    <td><button class="btn_test_table" value="'.$this->tables[$num_table][24].'">'.$this->tables[$num_table][24].'</td>
                 </tr>
             </table>
         ';
