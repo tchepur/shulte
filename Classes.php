@@ -203,6 +203,7 @@ class User
         return $strResult;
     }
 
+
     public function createTable($id_table, $num_table)
     {
         if($id_table == 0) {
