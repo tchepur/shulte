@@ -218,3 +218,50 @@ body{
     background: orangered;
 }
 
+.general_block .success_end_test{
+    font-size: 35px;
+    font-weight: bold;
+    text-align: center;
+    padding: 30px;
+}
+
+.general_block .show_info{
+    font-size: 30px;
+    border-spacing: 10px;
+    width: 98%;
+    border: 2px solid darkgray;
+    border-spacing: 0px;
+    border-bottom: 0;
+}
+
+.general_block .show_info td{
+    border-bottom: 2px solid darkgray;
+    padding: 10px;
+}
+
+.general_block .show_info .td_info{
+    width: 15%;
+}
+
+.general_block .show_info .td_right{
+    border-right: 2px solid darkgray;
+    text-align: right;
+}
+
+.general_block .show_info .td_last{
+    text-align: right;
+}
+
+.general_block ._res_show_info{
+    border: 0px;
+}
+
+.general_block ._res_show_info td{
+    border-bottom: 0px;
+}
+
+.time_out{
+    text-align: justify;
+    width: 98%;
+    margin-top: 15%;
+}
