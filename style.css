@@ -184,3 +184,37 @@ body{
 .button_start_test:active {
     background: white;
 }
+
+.general_block .test_table_0, .general_block .test_table_1, .general_block .test_table_2,
+.general_block .test_table_3, .general_block .test_table_4{
+    position: relative;
+    font-size: 30px;
+    margin-left: 25%;
+    margin-top: 4%;
+    border: 0px solid darkgray;
+}
+
+.general_block .test_table_0 td, .general_block .test_table_1 td, .general_block .test_table_2 td,
+.general_block .test_table_3 td, .general_block .test_table_4 td{
+    border: 2px solid whitesmoke;
+}
+
+.general_block .test_table_0 tr, .general_block .test_table_1 tr, .general_block .test_table_2 tr,
+.general_block .test_table_3 tr, .general_block .test_table_4 tr{
+    border: 2px solid black;
+}
+
+.btn_test_table{
+    height: 120px;
+    width: 120px;
+    font-size: 25px;
+}
+
+._background-green{
+    background: lightgreen;
+}
+
+._background-red{
+    background: orangered;
+}
+
