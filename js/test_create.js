@@ -108,20 +108,21 @@ $(document).ready(function($) {
                 var correct_number = 1;
                 var prev_btn = $(this);
                 $( '.general_block' ).html( data_parsed );
-
-                tables_time[0] = 36;
-                tables_time[1] = 70;
-                end_test(true);
-
-
                 var timer_idf = setInterval( timer_test, 1000 );
+
+                /*tables_time[0] = 30;
+                tables_time[1] = 30;
+                tables_time[2] = 30;
+                tables_time[3] = 30;
+                tables_time[4] = 30;
+                end_test(true);*/
 
                 $('button').on('click', function(){
                     prev_btn.removeClass("_background-green");
                     prev_btn.removeClass("_background-red");
                     if ( $(this).val() == correct_number ) {
                         if ( correct_number == 25 ) {
-                            if ( table_number < 0 ) {
+                            if ( table_number < 4 ) {
                                 correct_number = 1;
                                 $('.test_table_' + table_number).hide();
                                 $('.test_table_header_' + table_number).hide();
@@ -132,7 +133,7 @@ $(document).ready(function($) {
                                 prev_sec = sec;
                             } else {
                                 //завершить тест и показать результаты
-                                console.log(tables_time);
+                                tables_time.push( sec - prev_sec );
                                 end_test(true);
                             }
                         } else {

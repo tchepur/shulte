@@ -17,6 +17,8 @@
                 $result[ 'gender' ] = $str[7];
                 $result[ 'age' ] = $str[8];
                 $result[ 'group' ] = $str[9];
+                $result[ 'num_test' ] = $str[10];
+                $result[ 'login' ] = $_POST[ 'login_value' ];
                 break;
             }
         }

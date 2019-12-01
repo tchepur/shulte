@@ -265,3 +265,13 @@ body{
     width: 98%;
     margin-top: 15%;
 }
+
+.history_tests{
+    padding: 20px;
+}
+
+.change_group{
+    padding: 20px;
+    margin-left: 84%;
+    margin-top: 20px;
+}

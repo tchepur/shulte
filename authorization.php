@@ -29,6 +29,8 @@
                 <input class="user_gender" type="text" name="gender" hidden>
                 <input class="user_age" type="text" name="age" hidden>
                 <input class="user_group" type="text" name="group" hidden>
+                <input class="user_num_test" type="text" name="num_test" hidden>
+                <input class="user_login" type="text" name="login" hidden>
             </form>
     </body>
 </html>
