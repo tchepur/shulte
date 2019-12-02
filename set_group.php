@@ -1,4 +1,4 @@
 <?php
     require "Classes.php";
     session_start();
-    echo $_SESSION[ 'user' ]->setNewGroup();
+    echo $_SESSION[ 'user' ]->setNewGroup($_POST[ 'list' ]);
