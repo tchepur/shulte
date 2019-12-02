@@ -1,9 +1,9 @@
 <?php
 class User
 {
-    protected $name, $surname, $patronymic, $mail, $gender, $age, $group, $tables;
+    protected $name, $surname, $patronymic, $mail, $gender, $age, $group, $tables, $num_test, $login;
 
-    public function __construct($name, $surname, $patronymic, $mail, $gender, $age, $group)
+    public function __construct($name, $surname, $patronymic, $mail, $gender, $age, $group, $num_test, $login)
     {
         $this->setName($name);
         $this->setSurname($surname);
@@ -13,6 +13,8 @@ class User
         $this->setGender($gender);
         $this->setGroup($group);
         $this->setTables();
+        $this->setNumTest($num_test);
+        $this->SetLogin($login);
     }
 
     public function __destruct()
@@ -23,6 +25,16 @@ class User
     public function getName()
     {
         return $this->name;
+    }
+
+    public function getLogin()
+    {
+        return $this->login;
+    }
+
+    public function getNumTest()
+    {
+        return $this->num_test;
     }
 
     public function getSurname()
@@ -55,6 +67,11 @@ class User
         return $this->group;
     }
 
+    public function setLogin($login)
+    {
+        return $this->login = $login;
+    }
+
     public function setAge($age)
     {
         $this->age = $age;
@@ -78,6 +95,11 @@ class User
     public function setName($name)
     {
         $this->name = $name;
+    }
+
+    public function setNumTest($num_test)
+    {
+        $this->num_test = $num_test;
     }
 
     public function setPatronymic($patronymic)
@@ -188,16 +210,16 @@ class User
         return $tables_code;
     }
 
-    public function endTest($num_mistakes, $each_time_table, $in_time)
+    public function endTest($num_mistakes, $each_time_table, $in_time, $login_value)
     {
         $strResult = '';
-        $sec_testing = array_sum($each_time_table);
         if ($in_time == true) {
+            $sec_testing = array_sum($each_time_table);
             $strResult = "<div class=\"success_end_test\">Поздравляем, вы успешно завершили тестирование!</div>";
-            $strResult .= $this->showHistoryTests($num_mistakes, $each_time_table);
+            $strResult .= $this->showResultTest($num_mistakes, $each_time_table, $login_value);
         } else {
             $strResult = '<div class="time_out">К сожалению ваше время на прохождение тестирования вышло. Это
-            сообщение означает, что в момент прохождения тестирования вы были крайне не внимательный! 
+            сообщение означает, что в момент прохождения тестирования вы были крайне <strong>не внимательный! </strong> 
             Такое возможно по ряду причин, например, в следствии высокой степени усталости. Хорошо отдохните, выберите
             выходной день, когда не будете ничем заняты и попробуйте пройти тестирование в следующий раз! Желаем вам удачи.</div>';
         }
@@ -266,7 +288,7 @@ class User
         }
     }
 
-    public function showHistoryTests($num_mistakes, $each_time_table)
+    public function showResultTest($num_mistakes, $each_time_table, $login_value)
     {
         $strResult = '';
         $strTimeTables = '';
@@ -300,7 +322,9 @@ class User
                 </tr>
             </table>
         ';
-
+        $this->saveTestResults($num_mistakes, $each_time_table, $effective_work, $VR, $PU, $login_value);
+        $this->setNumTest($this->getNumTest()+1);
+        $this->rewriteUserInfo($login_value);
         return $strResult;
     }
 
@@ -308,20 +332,15 @@ class User
     {
         $strResult = 'Заключение: ';
         if ($ER <= 30) {
-            $strResult .= 'Ваша эффективность работы оценивается в 5 баллов. Это означает, что на текущий момент вы обладаете 
-            наиболее высокой степенью эффективности работы. ';
+            $strResult .= 'Ваша эффективность работы оценивается в 5 баллов. Это означает, что на текущий момент вы обладаете наиболее высокой степенью эффективности работы. ';
         } elseif ($ER <= 35) {
-            $strResult .= 'Ваша эффективность работы оценивается в 4 балла. Это означает, что на текущий момент вы обладаете 
-            дочтатояно высокой степенью эффективности работы. ';
+            $strResult .= 'Ваша эффективность работы оценивается в 4 балла. Это означает, что на текущий момент вы обладаете достаточно высокой степенью эффективности работы. ';
         } elseif ($ER <= 45) {
-            $strResult .= 'Ваша эффективность работы оценивается в 3 балла. Это означает, что на текущий момент вы обладаете 
-            средней степенью эффективности работы. ';
+            $strResult .= 'Ваша эффективность работы оценивается в 3 балла. Это означает, что на текущий момент вы обладаете средней степенью эффективности работы. ';
         } elseif ($ER <= 55) {
-            $strResult .= 'Ваша эффективность работы оценивается в 2 балла. Это означает, что на текущий момент вы обладаете 
-            степенью эффективности работы ниже среднего. ';
+            $strResult .= 'Ваша эффективность работы оценивается в 2 балла. Это означает, что на текущий момент вы обладаете степенью эффективности работы ниже среднего. ';
         } else {
-            $strResult .= 'Ваша эффективность работы оценивается в 1 балл. Это означает, что на текущий момент вы обладаете 
-            крайне низкой степенью эффективности работы. ';
+            $strResult .= 'Ваша эффективность работы оценивается в 1 балл. Это означает, что на текущий момент вы обладаете крайне низкой степенью эффективности работы. ';
         }
         if ($VR <= 1) {
             $strResult .= 'Ваш показатель степени врабатываемости - высокий. ';
@@ -335,30 +354,495 @@ class User
         }
         return $strResult;
     }
+
+    public function saveTestResults($num_mistakes, $each_time_table, $effective_work, $VR, $PU, $login_value){
+        $test_file = fopen('users_test/'.$login_value.'_test_' .$this->getNumTest().'.txt', 'w');
+        fwrite($test_file, array_sum($each_time_table).' '.$each_time_table[0].' '.$each_time_table[1].' '.$each_time_table[2].' '.
+            $each_time_table[3].' '.$each_time_table[4].' '.$num_mistakes.' '.round((array_sum($each_time_table) / (25 * count($each_time_table))), 2).' '.
+            $effective_work.' '.$VR. ' ' .$PU. ''."\n".''. $this->createConclusion($effective_work,$VR,$PU) ."\n".
+            'Комментарий психолога: на данный момент психолог не оставил рекомендаций/замечаний к вашему результату прохождения тестирования.');
+        fclose($test_file);
+    }
+
+    public function rewriteUserInfo($login_val){
+        $user_data = array();
+        $descriptor_of_file = fopen("usersDATA/log_pas.txt", "r");
+        while ( !feof($descriptor_of_file) ) {
+            $str = fgets($descriptor_of_file);
+            $str = explode(" ", $str);
+            if (strcasecmp($login_val, $str[0]) != 0) {
+                array_push($user_data, array(
+                    'login' => $str[0],
+                    'pass' => $str[1],
+                    'type' => $str[2],
+                    'surname' => $str[3],
+                    'name' => $str[4],
+                    'patronymic' => $str[5],
+                    'mail' => $str[6],
+                    'gender' => $str[7],
+                    'age' => $str[8],
+                    'group' => $str[9],
+                    'num_test' => $str[10]
+                ));
+            } else {
+                array_push($user_data, array(
+                    'login' => $str[0],
+                    'pass' => $str[1],
+                    'type' => $str[2],
+                    'surname' => $str[3],
+                    'name' => $str[4],
+                    'patronymic' => $str[5],
+                    'mail' => $str[6],
+                    'gender' => $str[7],
+                    'age' => $str[8],
+                    'group' => $str[9],
+                    'num_test' => (int)$str[10]+1
+                ));
+            }
+        }
+        fclose($descriptor_of_file);
+        $descriptor_of_file = fopen("usersDATA/log_pas.txt", "w");
+        $num_rows = count($user_data);
+        foreach ($user_data as $elem){
+            $num_rows--;
+            if ($num_rows != 0)
+                $str = $elem[ 'login' ].' '.$elem['pass'].' '.$elem['type'].' '.$elem['surname'].' '.
+                $elem['name'].' '.$elem['patronymic'].' '.$elem['mail'].' '.$elem['gender'].' '.$elem['age'].' '. $elem['group'].' '.$elem['num_test']."\n";
+            else
+                $str = $elem[ 'login' ].' '.$elem['pass'].' '.$elem['type'].' '.$elem['surname'].' '.
+                $elem['name'].' '.$elem['patronymic'].' '.$elem['mail'].' '.$elem['gender'].' '.$elem['age'].' '. $elem['group'].' '.$elem['num_test'];
+            fwrite($descriptor_of_file, $str);
+
+        }
+        fclose($descriptor_of_file);
+    }
+
+    public function showHistoryTest(){
+        $strResult = '';
+        $strResult = '<div class="general_block">';
+        if ( $this->getNumTest() == 0 ){
+
+            $strResult .= '<div class="no_have_test" style="padding: 20px; margin-top: 5%;">К сожалению, на текущий момент вы не прошли ни одного тестирования. Для того чтобы в этом разделы появились результаты, выберите в меню
+            слева <strong>"Пройти тестирование"</strong> и по завершению мы сможем предоставить вам интересующие вас данные!</div> 
+            <img src="users_photo/bad_smile.png" style="margin-left: 25%;"></img>';
+        } else {
+            $strResult .= '<div class="history_tests">Просмотреть результаты тестирования под номером <select class="select_test" style=" font-size: 20px;">';
+            $strResult .= '<option value="-1"></option>';
+            for($i=0; $i<$this->getNumTest(); $i++)
+                $strResult .= '<option value="'.$i.'">'.($i+1).'</option>';
+            $strResult .= '</select></div><div class="results_of_testing"></div>';
+        }
+        $strResult .= "</div>";
+        return $strResult;
+    }
+
+
+    public function showResultOfChosenTest($num_chosen_test){
+        $strResult = '';
+        $description_of_file = @fopen('users_test/'.$this->getLogin().'_test_'.$num_chosen_test.'.txt','r');
+        if ($description_of_file == false) {
+            $strResult .= '<br>Возникла непредвиденная ошибка! Выбранное тестирование, к сожалению, не сохранилось. Обратитесь
+            к администратору для решения данной проблемы.';
+            return $strResult;
+        } else {
+            $str = fgets($description_of_file);
+            $str = explode(" ", $str);
+            $full_test_time = $str[0];
+            $table_time_1 = $str[1];
+            $table_time_2 = $str[2];
+            $table_time_3 = $str[3];
+            $table_time_4 = $str[4];
+            $table_time_5 = $str[5];
+            $num_mistakes = $str[6];
+            $mean_time_find = $str[7];
+            $ER = $str[8];
+            $VR = $str[8];
+            $UP = $str[10];
+            $conclusion = fgets($description_of_file);
+            $psych_conclusion = fgets($description_of_file);
+            $strResult .= $this->createChosenTable($full_test_time, $table_time_1, $table_time_2, $table_time_3, $table_time_4, $table_time_5, $num_mistakes, $mean_time_find, $ER, $VR, $UP, $conclusion, $psych_conclusion);
+            return $strResult;
+        }
+    }
+
+    public function createChosenTable($full_test_time, $table_time_1, $table_time_2, $table_time_3, $table_time_4, $table_time_5, $num_mistakes, $mean_time_find, $ER, $VR, $PU, $conclusion, $psych_conclusion){
+        $strTimeTables = '';
+        $array_second_part_table = array(
+            '<td>Количество совершенных ошибок</td><td class="td_last">' . $num_mistakes . '</td>',
+            '<td>Среднее время нахождения нужного числа</td><td class="td_last">' . round(($full_test_time / (25 * 5)), 2) . ' сек.</td>',
+            '<td>Эффективность работы</td><td class="td_last">' . round($ER, 2) . ' сек.</td>',
+            '<td>Степень врабатываемости</td><td class="td_last">' . round($VR, 2) . ' сек.</td>',
+            '<td>Психическая устойчивость</td><td class="td_last">' . round($PU, 2) . ' сек.</td>'
+
+        );
+        $each_time_table = array($table_time_1, $table_time_2,$table_time_3,$table_time_4,$table_time_5);
+        for ($i = 0; $i < 5; $i++) {
+            $strTimeTables .= '<tr><td>Время таблицы ' . ($i + 1) . '</td><td class="td_info">&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td><td class="td_right">' . $each_time_table[$i] . ' сек.</td>';
+            $strTimeTables .= $array_second_part_table[$i] . '</tr>';
+        }
+        return '
+             <table class="show_info">
+                <tr>
+                    <td colspan="4">Время прохождения тестирования</td><td class="td_last">' . intval($full_test_time/ 60) . ' мин ' . ($full_test_time % 60) . ' сек.</td> 
+                </tr>' . $strTimeTables . '
+            </table>
+            <table class="show_info _res_show_info">
+                <tr style="text-align: justify">
+                    <td colspan="5">'.$conclusion.'</td>
+                </tr>
+                <tr style="text-align: justify">
+                    <td>'.$psych_conclusion.'</td>
+                </tr>
+            </table>       
+        ';
+    }
+
+    public function getUsersList(){
+        $user_data = array();
+        $descriptor_of_file = fopen("usersDATA/log_pas.txt", "r");
+        while ( !feof($descriptor_of_file) ) {
+            $str = fgets($descriptor_of_file);
+            $str = explode(" ", $str);
+            array_push($user_data, array(
+                'login' => $str[0],
+                'pass' => $str[1],
+                'type' => $str[2],
+                'surname' => $str[3],
+                'name' => $str[4],
+                'patronymic' => $str[5],
+                'mail' => $str[6],
+                'gender' => $str[7],
+                'age' => $str[8],
+                'group' => $str[9],
+                'num_test' => $str[10]
+            ));
+        }
+        fclose($descriptor_of_file);
+        return $user_data;
+    }
+
+    public function rewriteFullInfo($user_data){
+        $descriptor_of_file = fopen("usersDATA/log_pas.txt", "w");
+        foreach ($user_data as $elem){
+            $str = $elem[ 'login' ].' '.$elem['pass'].' '.$elem['type'].' '.$elem['surname'].' '.
+                $elem['name'].' '.$elem['patronymic'].' '.$elem['mail'].' '.$elem['gender'].' '.$elem['age'].' '. $elem['group'].' '.$elem['num_test']."";
+            fwrite($descriptor_of_file, $str);
+        }
+        fclose($descriptor_of_file);
+    }
+
+
+    public function createTableCompare($array){
+        $strResult = '<table class="show_info" style="margin-top: 20px;">
+                        <tr>
+                            <td>Фамилия</td><td>Имя</td><td>Сред. время прохождения тестирования</td><td>Сред. кол-во ошибок</td><td>Сред. знач. эффективности работы</td><td>Сред. знач. врабатываемости</td><td>Сред. знач. психической устойчивости</td>
+                        </tr>';
+        $strPart = '';
+        for($i=0; $i<count($array); $i++){
+            $strPart .= '<tr>
+                            <td>'.$array[$i]['surname'].'</td><td>'.$array[$i]['name'].'</td><td>'.($array[$i]['table_time_1']+$array[$i]['table_time_2']+$array[$i]['table_time_3']+$array[$i]['table_time_4']+$array[$i]['table_time_5']).'</td><td>'.$array[$i]['num_mistakes'].'</td><td>'.$array[$i]['ER'].'</td><td>'.$array[$i]['VR'].'</td><td>'.$array[$i]['UP'].'</td>
+                         </tr>';
+        }
+        $strResult .= $strPart.'</table>';
+        return $strResult;
+    }
+
+    public function compareChosenResultsIsp($list){
+        $chosen_users = array();
+        $means_value = array();
+        $user_data = $this->getUsersList();
+        for($i=0; $i<count($list); $i++){
+            for($j=0; $j<count($user_data); $j++) {
+                if($list[$i]['name'] == $user_data[$j]['login'] ){
+                    array_push($chosen_users,$user_data[$j]);
+                    break;
+                }
+            }
+        }
+        for($i=0; $i<count($chosen_users); $i++){
+            $table_time_1=0;
+            $table_time_2=0;
+            $table_time_3=0;
+            $table_time_4=0;
+            $table_time_5=0;
+            $num_mistakes=0;
+            $mean_time_find = 0;
+            $ER=0;
+            $VR=0;
+            $UP=0;
+            $chosen_users[$i]['num_test'] = (int)$chosen_users[$i]['num_test'];
+            for ($j=0; $j<$chosen_users[$i]['num_test']; $j++){
+                $res = $this->getInfoFromFileTest($chosen_users[$i]['login'], $chosen_users[$i]['num_test']);
+                $table_time_1+=$res['table_time_1'];
+                $table_time_2+=$res['table_time_2'];
+                $table_time_3+=$res['table_time_3'];
+                $table_time_4+=$res['table_time_4'];
+                $table_time_5+=$res['table_time_5'];
+                $num_mistakes+=$res['num_mistakes'];
+                $mean_time_find+=$res['mean_time_find'];
+                $ER+=$res['ER'];
+                $VR+=$res['VR'];
+                $UP+=$res['UP'];
+            }
+            array_push($means_value,array(
+                'login' => $chosen_users[$i]['login'],
+                'name' => $chosen_users[$i]['name'],
+                'surname' => $chosen_users[$i]['surname'],
+                'table_time_1' => $table_time_1/$chosen_users[$i]['num_test'],
+                'table_time_2' => $table_time_2/$chosen_users[$i]['num_test'],
+                'table_time_3' => $table_time_3/$chosen_users[$i]['num_test'],
+                'table_time_4' => $table_time_4/$chosen_users[$i]['num_test'],
+                'table_time_5' => $table_time_5/$chosen_users[$i]['num_test'],
+                'num_mistakes' => $num_mistakes/$chosen_users[$i]['num_test'],
+                'mean_time_find' => $mean_time_find/$chosen_users[$i]['num_test'],
+                'ER' => round($ER/$chosen_users[$i]['num_test'],2),
+                'VR' => round($VR/$chosen_users[$i]['num_test'],2),
+                'UP' => round($UP/$chosen_users[$i]['num_test'],2)
+            ));
+        }
+        return ($this->createTableCompare($means_value));
+    }
+
+
+    public function getInfoFromFileTest($login, $num_chosen_test){
+        $strResult = '';
+        $num_chosen_test = (int)$num_chosen_test;
+        $num_chosen_test--;
+        $description_of_file = @fopen('users_test/'.$login.'_test_'.$num_chosen_test.'.txt','r');
+        $str = fgets($description_of_file);
+        $str = explode(" ", $str);
+
+        $res = array(
+            'table_time_1' => (int)$str[1],
+            'table_time_2' => (int)$str[2],
+            'table_time_3' => (int)$str[3],
+            'table_time_4' => (int)$str[4],
+            'table_time_5' => (int)$str[5],
+            'num_mistakes' => (int)$str[6],
+            'mean_time_find' => (int)$str[7],
+            'ER' => (float)$str[8],
+            'VR' => (float)$str[8],
+            'UP' => (float)$str[10]
+        );
+        return $res;
+
+    }
 }
 
 class Psych extends User
 {
-    protected function createGroup()
+    public function createGroup()
     {
+        $user_data = $this->getUsersList();
+        $strTableIsp = '';
+        foreach ($user_data as $user){
+            $strOptions = '';
+            if ( $user['type'] != 'psh' ) {
+                if($user['group'] == 0){
+                    $strOptions .= 'value="0"';
+                } elseif($user['group'] == 1) {
+                    $strOptions .= 'value="1"';
+                } elseif($user['group'] == 2) {
+                    $strOptions .= 'value="2"';
+                } elseif($user['group'] == 3) {
+                    $strOptions .= 'value="3"';
+                } elseif($user['group'] == 4) {
+                    $strOptions .= 'value="4"';
+                } else {
+                    $strOptions .= 'value="5"';
+                }
+                $strTableIsp .= "
+                <tr>
+                    <td>" . $user['surname'] . "</td><td>" . $user['name'] . "</td><td>" . $user['patronymic'] . "</td><td>" . $user['gender'] . "</td><td>" . $user['age'] . "</td>
+                    <td> <input name='".$user['login']."' style=\" font-size: 20px;\" $strOptions>
+                    </td>
+                </tr>
+                ";
+            }
+        }
+        $strResult = ' <form class="my" method="post" action="script:0">
+            <div class="general_block">
+            <table class="show_info" style="margin-top: 2%;">
+                <tr>
+                    <td>Фамилия</td><td>Имя</td><td>Отчество</td><td>Пол</td><td>Возраст</td><td>Код группы</td>
+                </tr>'.$strTableIsp
 
+            .'
+            </table>
+            <button type = "submit" class="change_group">Подтвердить изменения</button>
+            <div class="result_of_change_group_good" hidden>Изменения успешно выполнены!</div>
+            <div class="result_of_change_group_error" hidden>Не удалось выполнить изменения, обратитесь к администратору</div>
+            </div></form>';
+
+        return $strResult;
     }
 
-    protected function showUsersHistoryTest()
-    {
-
+    public function setNewGroup($list_change){
+        $user_data = $this->getUsersList();
+        for($i=0; $i<count($list_change); $i++){
+            for($j=0; $j<count($user_data); $j++) {
+                if($list_change[$i]['name'] == $user_data[$j]['login'] ){
+                    $user_data[$j]['group'] = $list_change[$i]['value'];
+                    break;
+                }
+            }
+        }
+        $this->rewriteFullInfo($user_data);
     }
 
-    protected function compareUsersTest()
-    {
+    public function showHistoryTestChosenUser($login){
+        $strResult = '';
+        $user_data = $this->getUsersList();
+        $current_user = array();
+        for($i=0; $i<count($user_data); $i++)
+            if($login == $user_data[$i]['login']){
+                $current_user = $user_data[$i];
+                break;
+            }
 
+        if ( $current_user['num_test'] == 0 ){
+            $strResult .= '<div class="no_have_test" style="padding: 20px; margin-top: 5%;">К сожалению, на текущий момент выбранный пользовотель не прошел ни одного тестирования.</div> 
+            <img src="users_photo/bad_smile.png" style="margin-left: 25%;"></img>';
+        } else {
+            $strResult .= '<input hidden class="this" name="login" value="'.$login.'">';
+            $strResult .= '<div class="history_tests">Просмотреть результаты тестирования пользователя <strong>'.$current_user['surname'].' '.$current_user['name'].'</strong> под номером <select class="select_test" style=" font-size: 20px;">';
+            $strResult .= '<option value="-1"></option>';
+            for($i=0; $i<$current_user['num_test']; $i++)
+                $strResult .= '<option value="'.$i.'">'.($i+1).'</option>';
+            $strResult .= '</select></div><div class="results_of_testing"></div>';
+        }
+        return $strResult;
     }
+
+    public function showUsersHistoryTest()
+    {
+        $user_data = $this->getUsersList();
+        $strTableIsp = '';
+        foreach ($user_data as $user){
+            if ( $user['type'] != 'psh' ) {
+                $strTableIsp .= "
+                <tr>
+                    <td>" . $user['surname'] . "</td><td>" . $user['name'] . "</td><td>" . $user['patronymic'] . "</td><td>" . $user['gender'] . "</td><td style='text-align: center;'>" . $user['age'] . "</td><td style='text-align: center;'>" . $user['group'] . "</td>
+                    <td style='text-align: center;'> <input class='box' type='checkbox' name='".$user['login']."' style=\" font-size: 20px;\" value='0'>
+                    </td>
+                </tr>
+                ";
+            }
+        }
+        $strResult = ' <form class="my" method="post" action="script:0">
+            <div class="general_block">
+            <table class="show_info" style="margin-top: 2%;">
+                <tr>
+                    <td>Фамилия</td><td>Имя</td><td>Отчество</td><td>Пол</td><td style=\'   text-align: center;\'>Возраст</td><td style=\'text-align: center;\'>Код группы</td><td style=\'text-align: center;\'>Выбрать для сравнения</td>
+                </tr>'.$strTableIsp
+
+            .'
+            </table>
+            <button type = "submit" class="show_result_chosen_users">Просмотреть результат выбранного пользователя</button>
+            </div></form>';
+
+
+        return $strResult;
+    }
+
+    public function compareUsersTest()
+    {
+        $user_data = $this->getUsersList();
+        $strTableIsp = '';
+        foreach ($user_data as $user){
+            if ( $user['type'] != 'psh' && $user['num_test'] > 0) {
+                $strTableIsp .= "
+                <tr>
+                    <td>" . $user['surname'] . "</td><td>" . $user['name'] . "</td><td>" . $user['patronymic'] . "</td><td>" . $user['gender'] . "</td><td style='text-align: center;'>" . $user['age'] . "</td><td style='text-align: center;'>" . $user['group'] . "</td>
+                    <td style='text-align: center;'> <input type='checkbox' name='".$user['login']."' style=\" font-size: 20px;\" value='0'>
+                    </td>
+                </tr>
+                ";
+            }
+        }
+        $strResult = ' <form class="my" method="post" action="script:0">
+            <div class="general_block">
+            <table class="show_info" style="margin-top: 2%;">
+                <tr>
+                    <td>Фамилия</td><td>Имя</td><td>Отчество</td><td>Пол</td><td style=\'   text-align: center;\'>Возраст</td><td style=\'text-align: center;\'>Код группы</td><td style=\'text-align: center;\'>Выбрать для сравнения</td>
+                </tr>'.$strTableIsp
+
+            .'
+            </table>
+            <button type = "submit" class="compare_users">Сравнить результаты выбранных пользователей</button>
+            </div></form>';
+
+        return $strResult;
+    }
+
+    public function showChosenResultsIsp($list){
+        $login = $list[0]['name'];
+        return $this->showHistoryTestChosenUser($login);
+    }
+
+    public function showTargetResult($test_number, $login)
+    {
+        $strResult = '';
+        $description_of_file = @fopen('users_test/' . $login . '_test_' . $test_number . '.txt', 'r');
+        if ($description_of_file == false) {
+            $strResult .= '<br>Возникла непредвиденная ошибка! Выбранное тестирование, к сожалению, не сохранилось. Обратитесь
+            к администратору для решения данной проблемы.';
+            return $strResult;
+        } else {
+            $str = fgets($description_of_file);
+            $str = explode(" ", $str);
+            $full_test_time = $str[0];
+            $table_time_1 = $str[1];
+            $table_time_2 = $str[2];
+            $table_time_3 = $str[3];
+            $table_time_4 = $str[4];
+            $table_time_5 = $str[5];
+            $num_mistakes = $str[6];
+            $mean_time_find = $str[7];
+            $ER = $str[8];
+            $VR = $str[8];
+            $UP = $str[10];
+            $conclusion = fgets($description_of_file);
+            $psych_conclusion = fgets($description_of_file);
+            $strResult .= $this->createChosenTable($full_test_time, $table_time_1, $table_time_2, $table_time_3, $table_time_4, $table_time_5, $num_mistakes, $mean_time_find, $ER, $VR, $UP, $conclusion, $psych_conclusion);
+            return $strResult;
+        }
+    }
+
 }
 
 class testedUser extends User
 {
-    protected function compareTests()
-    {
+    public function compareChosenTestWithGroup($num_test, $group){
+        //задетектить номер группы, найти всех из группы и вызвать compareChosenResultsIsp($list)
+        $user_data = $this->getUsersList();
+        $compare_list = array();
+        for($i=0; $i<count($user_data);$i++){
+            if($user_data[$i]['group'] == $group && $user_data[$i]['num_test']>0){
+                $user_data[$i]['name'] = $user_data[$i]['login'];
+                array_push($compare_list, $user_data[$i]);
+            }
+        }
+        return $this->compareChosenResultsIsp($compare_list);
+    }
 
+    public function compareMyTest()
+    {
+        $strResult = '';
+        $strResult = '<div class="general_block">';
+        if ( $this->getNumTest() == 0 ){
+
+            $strResult .= '<div class="no_have_test" style="padding: 20px; margin-top: 5%;">К сожалению, на текущий момент вы не прошли ни одного тестирования. Для того чтобы в этом разделы появились результаты, выберите в меню
+            слева <strong>"Пройти тестирование"</strong> и по завершению мы сможем предоставить вам интересующие вас данные!</div> 
+            <img src="users_photo/bad_smile.png" style="margin-left: 25%;"></img>';
+        } else {
+            $strResult .= '<div class="history_tests">Сравнить результаты тестирования под номером <select class="select_test" style=" font-size: 20px;">';
+            $strResult .= '<option value="-1"></option>';
+            for($i=0; $i<$this->getNumTest(); $i++)
+                $strResult .= '<option value="'.$i.'">'.($i+1).'</option>';
+            $strResult .= '</select></div><div class="results_of_testing"></div>';
+        }
+        $strResult .= "</div>";
+        return $strResult;
     }
 }

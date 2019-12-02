@@ -12,7 +12,6 @@ $(document).ready(function($) {
             },
             success: function (data) {
                 var data_parsed = JSON.parse(data);
-                console.log( data_parsed );
                 if ( data_parsed[ 'registration_good' ] === 1 ) {
                     $('.authorization_block').prop('action', 'lk.php');
                     $('.user_type').val(data_parsed[ 'type' ]);
@@ -23,6 +22,8 @@ $(document).ready(function($) {
                     $('.user_group').val(data_parsed[ 'group' ]);
                     $('.user_gender').val(data_parsed[ 'gender' ]);
                     $('.user_patronymic').val(data_parsed[ 'patronymic' ]);
+                    $('.user_num_test').val(data_parsed[ 'num_test' ]);
+                    $('.user_login').val(data_parsed[ 'login' ]);
                     setTimeout(function(){
                         $('.button_authorization').trigger('click');
                     }, 100);

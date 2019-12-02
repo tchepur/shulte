@@ -2,8 +2,8 @@
 <div class="general_block">
     <p>Ваши анкетные данные: </p>
     <table class="info_table">
-        <tr>
-            <td rowspan="7" class="img_td general_td" background = "users_photo/<?php echo $login_value;?>.png"></td>
+        <tr> <?php?>
+            <td rowspan="7" class="img_td general_td" background = "users_photo/<?php echo $_SESSION['user']->getLogin();?>.png"></td>
             <td class="delimiter_col"> </td>
             <td class="general_td">Фамилия :</td>
             <td class="general_td"> <?php echo $_SESSION[ 'user' ]->getSurname();?> </td>
