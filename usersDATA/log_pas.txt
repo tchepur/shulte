@@ -1,6 +1,6 @@
 admin admin psh Чепур Артем Александрович tchepur@mail.ru муж 22 Нет 5
-user1 user1 isp Голенков Александр Анатольевич sanek0302@mail.ru муж 20 1 1
+user1 user1 isp Голенков Александр Анатольевич sanek0302@mail.ru муж 20 2 1
 user2 user2 isp Маслов Альберт Севастьянович maslov@gtrk.ru муж 25 3 0
-user3 user3 isp Горбочев Сергей Юрьевич grob712@yandex.ru муж 30 2 0
+user3 user3 isp Горбочев Сергей Юрьевич grob712@yandex.ru муж 30 2 1
 user4 user4 isp Голенкова Мария Геннадьевна glmariyya@mail.ru жен 45 4 0
 user5 user5 isp Земченко Евгений Анатольевич zem_eug1970@corp.nstu.ru муж 49 4 0

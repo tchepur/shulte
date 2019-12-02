@@ -530,6 +530,103 @@ class User
         }
         fclose($descriptor_of_file);
     }
+
+
+    public function createTableCompare($array){
+        $strResult = '<table class="show_info" style="margin-top: 20px;">
+                        <tr>
+                            <td>Фамилия</td><td>Имя</td><td>Сред. время прохождения тестирования</td><td>Сред. кол-во ошибок</td><td>Сред. знач. эффективности работы</td><td>Сред. знач. врабатываемости</td><td>Сред. знач. психической устойчивости</td>
+                        </tr>';
+        $strPart = '';
+        for($i=0; $i<count($array); $i++){
+            $strPart .= '<tr>
+                            <td>'.$array[$i]['surname'].'</td><td>'.$array[$i]['name'].'</td><td>'.($array[$i]['table_time_1']+$array[$i]['table_time_2']+$array[$i]['table_time_3']+$array[$i]['table_time_4']+$array[$i]['table_time_5']).'</td><td>'.$array[$i]['num_mistakes'].'</td><td>'.$array[$i]['ER'].'</td><td>'.$array[$i]['VR'].'</td><td>'.$array[$i]['UP'].'</td>
+                         </tr>';
+        }
+        $strResult .= $strPart.'</table>';
+        return $strResult;
+    }
+
+    public function compareChosenResultsIsp($list){
+        $chosen_users = array();
+        $means_value = array();
+        $user_data = $this->getUsersList();
+        for($i=0; $i<count($list); $i++){
+            for($j=0; $j<count($user_data); $j++) {
+                if($list[$i]['name'] == $user_data[$j]['login'] ){
+                    array_push($chosen_users,$user_data[$j]);
+                    break;
+                }
+            }
+        }
+        for($i=0; $i<count($chosen_users); $i++){
+            $table_time_1=0;
+            $table_time_2=0;
+            $table_time_3=0;
+            $table_time_4=0;
+            $table_time_5=0;
+            $num_mistakes=0;
+            $mean_time_find = 0;
+            $ER=0;
+            $VR=0;
+            $UP=0;
+            $chosen_users[$i]['num_test'] = (int)$chosen_users[$i]['num_test'];
+            for ($j=0; $j<$chosen_users[$i]['num_test']; $j++){
+                $res = $this->getInfoFromFileTest($chosen_users[$i]['login'], $chosen_users[$i]['num_test']);
+                $table_time_1+=$res['table_time_1'];
+                $table_time_2+=$res['table_time_2'];
+                $table_time_3+=$res['table_time_3'];
+                $table_time_4+=$res['table_time_4'];
+                $table_time_5+=$res['table_time_5'];
+                $num_mistakes+=$res['num_mistakes'];
+                $mean_time_find+=$res['mean_time_find'];
+                $ER+=$res['ER'];
+                $VR+=$res['VR'];
+                $UP+=$res['UP'];
+            }
+            array_push($means_value,array(
+                'login' => $chosen_users[$i]['login'],
+                'name' => $chosen_users[$i]['name'],
+                'surname' => $chosen_users[$i]['surname'],
+                'table_time_1' => $table_time_1/$chosen_users[$i]['num_test'],
+                'table_time_2' => $table_time_2/$chosen_users[$i]['num_test'],
+                'table_time_3' => $table_time_3/$chosen_users[$i]['num_test'],
+                'table_time_4' => $table_time_4/$chosen_users[$i]['num_test'],
+                'table_time_5' => $table_time_5/$chosen_users[$i]['num_test'],
+                'num_mistakes' => $num_mistakes/$chosen_users[$i]['num_test'],
+                'mean_time_find' => $mean_time_find/$chosen_users[$i]['num_test'],
+                'ER' => round($ER/$chosen_users[$i]['num_test'],2),
+                'VR' => round($VR/$chosen_users[$i]['num_test'],2),
+                'UP' => round($UP/$chosen_users[$i]['num_test'],2)
+            ));
+        }
+        return ($this->createTableCompare($means_value));
+    }
+
+
+    public function getInfoFromFileTest($login, $num_chosen_test){
+        $strResult = '';
+        $num_chosen_test = (int)$num_chosen_test;
+        $num_chosen_test--;
+        $description_of_file = @fopen('users_test/'.$login.'_test_'.$num_chosen_test.'.txt','r');
+        $str = fgets($description_of_file);
+        $str = explode(" ", $str);
+
+        $res = array(
+            'table_time_1' => (int)$str[1],
+            'table_time_2' => (int)$str[2],
+            'table_time_3' => (int)$str[3],
+            'table_time_4' => (int)$str[4],
+            'table_time_5' => (int)$str[5],
+            'num_mistakes' => (int)$str[6],
+            'mean_time_find' => (int)$str[7],
+            'ER' => (float)$str[8],
+            'VR' => (float)$str[8],
+            'UP' => (float)$str[10]
+        );
+        return $res;
+
+    }
 }
 
 class Psych extends User
@@ -712,106 +809,40 @@ class Psych extends User
         }
     }
 
-    public function getInfoFromFileTest($login, $num_chosen_test){
-        $strResult = '';
-        $num_chosen_test = (int)$num_chosen_test;
-        $num_chosen_test--;
-        $description_of_file = @fopen('users_test/'.$login.'_test_'.$num_chosen_test.'.txt','r');
-        $str = fgets($description_of_file);
-        $str = explode(" ", $str);
-
-        $res = array(
-            'table_time_1' => (int)$str[1],
-            'table_time_2' => (int)$str[2],
-            'table_time_3' => (int)$str[3],
-            'table_time_4' => (int)$str[4],
-            'table_time_5' => (int)$str[5],
-            'num_mistakes' => (int)$str[6],
-            'mean_time_find' => (int)$str[7],
-            'ER' => (float)$str[8],
-            'VR' => (float)$str[8],
-            'UP' => (float)$str[10]
-        );
-        return $res;
-
-    }
-
-    public function createTableCompare($array){
-        $strResult = '<table class="show_info" style="margin-top: 20px;">
-                        <tr>
-                            <td>Фамилия</td><td>Имя</td><td>Сред. время прохождения тестирования</td><td>Сред. кол-во ошибок</td><td>Сред. знач. эффективности работы</td><td>Сред. знач. врабатываемости</td><td>Сред. знач. психической устойчивости</td>
-                        </tr>';
-        $strPart = '';
-        for($i=0; $i<count($array); $i++){
-            $strPart .= '<tr>
-                            <td>'.$array[$i]['surname'].'</td><td>'.$array[$i]['name'].'</td><td>'.($array[$i]['table_time_1']+$array[$i]['table_time_2']+$array[$i]['table_time_3']+$array[$i]['table_time_4']+$array[$i]['table_time_5']).'</td><td>'.$array[$i]['num_mistakes'].'</td><td>'.$array[$i]['ER'].'</td><td>'.$array[$i]['VR'].'</td><td>'.$array[$i]['UP'].'</td>
-                         </tr>';
-        }
-        $strResult .= $strPart.'</table>';
-        return $strResult;
-    }
-
-    public function compareChosenResultsIsp($list){
-        $chosen_users = array();
-        $means_value = array();
-        $user_data = $this->getUsersList();
-        for($i=0; $i<count($list); $i++){
-            for($j=0; $j<count($user_data); $j++) {
-                if($list[$i]['name'] == $user_data[$j]['login'] ){
-                    array_push($chosen_users,$user_data[$j]);
-                    break;
-                }
-            }
-        }
-        for($i=0; $i<count($chosen_users); $i++){
-            $table_time_1=0;
-            $table_time_2=0;
-            $table_time_3=0;
-            $table_time_4=0;
-            $table_time_5=0;
-            $num_mistakes=0;
-            $mean_time_find = 0;
-            $ER=0;
-            $VR=0;
-            $UP=0;
-            $chosen_users[$i]['num_test'] = (int)$chosen_users[$i]['num_test'];
-            for ($j=0; $j<$chosen_users[$i]['num_test']; $j++){
-                $res = $this->getInfoFromFileTest($chosen_users[$i]['login'], $chosen_users[$i]['num_test']);
-                $table_time_1+=$res['table_time_1'];
-                $table_time_2+=$res['table_time_2'];
-                $table_time_3+=$res['table_time_3'];
-                $table_time_4+=$res['table_time_4'];
-                $table_time_5+=$res['table_time_5'];
-                $num_mistakes+=$res['num_mistakes'];
-                $mean_time_find+=$res['mean_time_find'];
-                $ER+=$res['ER'];
-                $VR+=$res['VR'];
-                $UP+=$res['UP'];
-            }
-            array_push($means_value,array(
-                'login' => $chosen_users[$i]['login'],
-                'name' => $chosen_users[$i]['name'],
-                'surname' => $chosen_users[$i]['surname'],
-                'table_time_1' => $table_time_1/$chosen_users[$i]['num_test'],
-                'table_time_2' => $table_time_2/$chosen_users[$i]['num_test'],
-                'table_time_3' => $table_time_3/$chosen_users[$i]['num_test'],
-                'table_time_4' => $table_time_4/$chosen_users[$i]['num_test'],
-                'table_time_5' => $table_time_5/$chosen_users[$i]['num_test'],
-                'num_mistakes' => $num_mistakes/$chosen_users[$i]['num_test'],
-                'mean_time_find' => $mean_time_find/$chosen_users[$i]['num_test'],
-                'ER' => round($ER/$chosen_users[$i]['num_test'],2),
-                'VR' => round($VR/$chosen_users[$i]['num_test'],2),
-                'UP' => round($UP/$chosen_users[$i]['num_test'],2)
-            ));
-        }
-        return ($this->createTableCompare($means_value));
-    }
 }
 
 class testedUser extends User
 {
-    protected function compareTests()
-    {
+    public function compareChosenTestWithGroup($num_test, $group){
+        //задетектить номер группы, найти всех из группы и вызвать compareChosenResultsIsp($list)
+        $user_data = $this->getUsersList();
+        $compare_list = array();
+        for($i=0; $i<count($user_data);$i++){
+            if($user_data[$i]['group'] == $group && $user_data[$i]['num_test']>0){
+                $user_data[$i]['name'] = $user_data[$i]['login'];
+                array_push($compare_list, $user_data[$i]);
+            }
+        }
+        return $this->compareChosenResultsIsp($compare_list);
+    }
 
+    public function compareMyTest()
+    {
+        $strResult = '';
+        $strResult = '<div class="general_block">';
+        if ( $this->getNumTest() == 0 ){
+
+            $strResult .= '<div class="no_have_test" style="padding: 20px; margin-top: 5%;">К сожалению, на текущий момент вы не прошли ни одного тестирования. Для того чтобы в этом разделы появились результаты, выберите в меню
+            слева <strong>"Пройти тестирование"</strong> и по завершению мы сможем предоставить вам интересующие вас данные!</div> 
+            <img src="users_photo/bad_smile.png" style="margin-left: 25%;"></img>';
+        } else {
+            $strResult .= '<div class="history_tests">Сравнить результаты тестирования под номером <select class="select_test" style=" font-size: 20px;">';
+            $strResult .= '<option value="-1"></option>';
+            for($i=0; $i<$this->getNumTest(); $i++)
+                $strResult .= '<option value="'.$i.'">'.($i+1).'</option>';
+            $strResult .= '</select></div><div class="results_of_testing"></div>';
+        }
+        $strResult .= "</div>";
+        return $strResult;
     }
 }
