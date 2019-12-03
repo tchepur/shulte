@@ -7,8 +7,11 @@
 </head>
 <body>
 <div class="header_lk">
-    <p> Добро пожаловать, <?php echo $_SESSION[ 'user' ]->getName()?> <?php echo $_SESSION[ 'user' ]->getSurname()?>. Вы авторизировались
-        как <?php if ( strcasecmp($type,'isp') === 0 ) echo "испытуемый!"; else echo "психолог!";?></p>
+    <div class="header_line">
+        <p> Добро пожаловать, <?php echo $_SESSION[ 'user' ]->getName()?> <?php echo $_SESSION[ 'user' ]->getSurname()?>. Вы авторизировались
+            как <?php if ( strcasecmp($type,'isp') === 0 ) echo "испытуемый!"; else echo "психолог!";?></p>
+
+    </div>
 </div>
 <div class="menu_lk">
     <h3 class="menu_title"> Выберите одно из доступных действий</h3>
@@ -24,4 +27,7 @@
             <li><a href="../compare_results_isp.php" class="compare_results_isp.php">Сравнить результаты тестирования испытуемых</a></li>
         <?php } ?>
     </ul>
+    <form action="authorization.php" metod="post">
+        <button class="logout">Выйти из учетной записи</button>
+    </form>
 </div>

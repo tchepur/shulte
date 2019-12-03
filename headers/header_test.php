@@ -13,8 +13,9 @@
 <div class="header_lk">
     <p> <?php if ( strcasecmp($_SESSION[ 'type' ],'isp') === 0 ) echo "Испытуемый: "; else echo "Психолог: ";?> <?php echo $_SESSION[ 'user' ]->getSurname()?> <?php echo $_SESSION[ 'user' ]->getName()?> </p>
 </div>
-<form class="menu" method="post" action="lk.php">
+
     <div class="menu_lk">
+        <form class="menu" method="post" action="lk.php">
         <h3 class="menu_title"> Выберите одно из доступных действий</h3>
         <ul class="menu_list">
             <li><a class="testing" href="../testing.php">Пройти тестирование</a></li>
@@ -39,5 +40,11 @@
         <input class="user_num_test" type="text" name="num_test" value="<?php echo $_SESSION[ 'user' ]->getNumTest() ?>" hidden>
         <input class="user_login" type="text" name="login_value" value="<?php echo $_SESSION[ 'user' ]->getLogin();?>" hidden>
         <button type="submit" class="back_lk" >Вернуться в личный кабинет</button>
+        </form>
+        <form action="authorization.php" metod="post">
+            <button class="logout" style="margin-top:5%;">Выйти из учетной записи</button>
+        </form>
     </div>
-</form>
+
+
+

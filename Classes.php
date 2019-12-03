@@ -3,7 +3,7 @@ class User
 {
     protected $name, $surname, $patronymic, $mail, $gender, $age, $group, $tables, $num_test, $login;
 
-    public function __construct($name, $surname, $patronymic, $mail, $gender, $age, $group, $num_test, $login)
+    public function __construct($name, $surname, $patronymic, $age, $mail, $gender, $group, $num_test, $login)
     {
         $this->setName($name);
         $this->setSurname($surname);
@@ -396,7 +396,7 @@ class User
                     'gender' => $str[7],
                     'age' => $str[8],
                     'group' => $str[9],
-                    'num_test' => (int)$str[10]+1
+                    'num_test' => (int)$str[10]+1 . "\n"
                 ));
             }
         }
@@ -404,11 +404,11 @@ class User
         $descriptor_of_file = fopen("usersDATA/log_pas.txt", "w");
         $num_rows = count($user_data);
         foreach ($user_data as $elem){
-            $num_rows--;
+          /*  $num_rows--;
             if ($num_rows != 0)
                 $str = $elem[ 'login' ].' '.$elem['pass'].' '.$elem['type'].' '.$elem['surname'].' '.
                 $elem['name'].' '.$elem['patronymic'].' '.$elem['mail'].' '.$elem['gender'].' '.$elem['age'].' '. $elem['group'].' '.$elem['num_test']."\n";
-            else
+            else*/
                 $str = $elem[ 'login' ].' '.$elem['pass'].' '.$elem['type'].' '.$elem['surname'].' '.
                 $elem['name'].' '.$elem['patronymic'].' '.$elem['mail'].' '.$elem['gender'].' '.$elem['age'].' '. $elem['group'].' '.$elem['num_test'];
             fwrite($descriptor_of_file, $str);
